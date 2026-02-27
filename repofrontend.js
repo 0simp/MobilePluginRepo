@@ -4,7 +4,7 @@
     window.__AVIA_OFFICIAL_REPO_LOADED__ = true;
 
     const STORAGE_KEY = "avia_plugins";
-    const BACKEND_FILE = "pluginrepobackend.js";
+    const OFFICIAL_REPO_URL = "https://avalilac.github.io/PluginRepo/pluginrepobackend.js";
 
     const getPlugins = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     const setPlugins = (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -55,11 +55,6 @@
     function renderRepo(data) {
         repoContent.innerHTML = "";
 
-        if (!data || !data.plugins) {
-            repoContent.innerHTML = "Invalid repo data.";
-            return;
-        }
-
         data.plugins.forEach(repoPlugin => {
 
             const row = document.createElement("div");
@@ -78,7 +73,7 @@
             title.style.fontWeight = "500";
 
             const desc = document.createElement("div");
-            desc.textContent = repoPlugin.description || "";
+            desc.textContent = repoPlugin.description;
             desc.style.fontSize = "12px";
             desc.style.opacity = "0.7";
 
@@ -111,54 +106,34 @@
         updateInstallStates();
     }
 
-    function loadBackendFromString(content) {
-        try {
-            return JSON.parse(content);
-        } catch {
-            try {
-                const cleaned = content
-                    .replace(/module\.exports\s*=\s*/, "")
-                    .replace(/export\s+default\s*/, "")
-                    .trim();
-                return eval("(" + cleaned + ")");
-            } catch {
-                return null;
-            }
-        }
-    }
-
     function refetchRepo() {
         if (!repoContent) return;
-
         repoContent.innerHTML = "Loading...";
 
-        try {
-            if (typeof require !== "undefined") {
-                const path = require("path");
-                const fs = require("fs");
-                const filePath = path.join(__dirname, BACKEND_FILE);
-                const content = fs.readFileSync(filePath, "utf8");
-                const data = loadBackendFromString(content);
-                if (!data) {
-                    repoContent.innerHTML = "Invalid repo JSON.";
-                    return;
-                }
-                renderRepo(data);
-            } else {
-                fetch("./" + BACKEND_FILE + "?t=" + Date.now(), { cache: "no-store" })
-                    .then(res => res.text())
-                    .then(text => {
-                        const data = loadBackendFromString(text);
-                        if (!data) {
-                            repoContent.innerHTML = "Invalid repo JSON.";
-                            return;
-                        }
-                        renderRepo(data);
-                    })
-                    .catch(() => repoContent.innerHTML = "Failed to load repo.");
+        function electronFetch() {
+            try {
+                const https = require("https");
+                https.get(OFFICIAL_REPO_URL, res => {
+                    let data = "";
+                    res.on("data", chunk => data += chunk);
+                    res.on("end", () => {
+                        renderRepo(JSON.parse(data));
+                    });
+                }).on("error", () => {
+                    repoContent.innerHTML = "Failed to fetch repo.";
+                });
+            } catch {
+                repoContent.innerHTML = "Failed to fetch repo.";
             }
+        }
+
+        try {
+            fetch(OFFICIAL_REPO_URL)
+                .then(res => res.json())
+                .then(data => renderRepo(data))
+                .catch(() => electronFetch());
         } catch {
-            repoContent.innerHTML = "Failed to load repo.";
+            electronFetch();
         }
     }
 
@@ -173,19 +148,24 @@
         panel.style.right = "24px";
         panel.style.width = "520px";
         panel.style.height = "460px";
-        panel.style.background = "#1e1e1e";
-        panel.style.color = "#fff";
+        panel.style.background = "var(--md-sys-color-surface, #1e1e1e)";
+        panel.style.color = "var(--md-sys-color-on-surface, #fff)";
         panel.style.borderRadius = "16px";
         panel.style.boxShadow = "0 8px 28px rgba(0,0,0,0.35)";
         panel.style.zIndex = "1000000";
         panel.style.display = "flex";
         panel.style.flexDirection = "column";
         panel.style.overflow = "hidden";
+        panel.style.border = "1px solid rgba(255,255,255,0.08)";
+        panel.style.backdropFilter = "blur(12px)";
 
         const header = document.createElement("div");
         header.textContent = "Official Repo";
         header.style.padding = "14px 16px";
         header.style.fontWeight = "600";
+        header.style.fontSize = "14px";
+        header.style.background = "var(--md-sys-color-surface-container, rgba(255,255,255,0.04))";
+        header.style.borderBottom = "1px solid rgba(255,255,255,0.08)";
         header.style.cursor = "move";
 
         const closeBtn = document.createElement("div");
@@ -194,37 +174,17 @@
         closeBtn.style.top = "12px";
         closeBtn.style.right = "16px";
         closeBtn.style.cursor = "pointer";
+        closeBtn.style.opacity = "0.7";
         closeBtn.onclick = () => panel.remove();
 
         repoContent = document.createElement("div");
         repoContent.style.flex = "1";
         repoContent.style.overflow = "auto";
         repoContent.style.padding = "16px";
-        repoContent.style.paddingBottom = "70px";
-
-        const footer = document.createElement("div");
-        footer.style.position = "absolute";
-        footer.style.left = "0";
-        footer.style.right = "0";
-        footer.style.bottom = "0";
-        footer.style.height = "60px";
-        footer.style.display = "flex";
-        footer.style.alignItems = "center";
-        footer.style.paddingLeft = "16px";
-
-        const refetchBtn = document.createElement("button");
-        refetchBtn.textContent = "Refetch";
-        refetchBtn.onclick = () => {
-            refetchRepo();
-            updateInstallStates();
-        };
-
-        footer.appendChild(refetchBtn);
 
         panel.appendChild(header);
         panel.appendChild(closeBtn);
         panel.appendChild(repoContent);
-        panel.appendChild(footer);
         document.body.appendChild(panel);
 
         enableDrag(panel, header);
