@@ -9,6 +9,16 @@
     const getPlugins = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     const setPlugins = (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
+    let repoContent;
+
+    function triggerManagerRefresh() {
+        const panel = document.getElementById("avia-plugins-panel");
+        if (!panel) return;
+        const refreshBtn = Array.from(panel.querySelectorAll("button"))
+            .find(b => b.textContent.trim() === "Refresh");
+        if (refreshBtn) refreshBtn.click();
+    }
+
     function injectButton() {
         const panel = document.getElementById("avia-plugins-panel");
         if (!panel) return;
@@ -25,16 +35,21 @@
         panel.appendChild(btn);
     }
 
-    function refreshPluginManager() {
-        const panel = document.getElementById("avia-plugins-panel");
-        if (!panel) return;
-
-        panel.remove();
-
-        setTimeout(() => {
-            const btn = document.getElementById("stoat-fake-plugins");
-            if (btn) btn.click();
-        }, 50);
+    function updateInstallStates() {
+        if (!repoContent) return;
+        const installed = getPlugins().map(p => p.url);
+        repoContent.querySelectorAll("[data-link]").forEach(row => {
+            const link = row.getAttribute("data-link");
+            const btn = row.querySelector("button");
+            if (!btn) return;
+            if (installed.includes(link)) {
+                btn.textContent = "Installed";
+                btn.disabled = true;
+            } else {
+                btn.textContent = "Install";
+                btn.disabled = false;
+            }
+        });
     }
 
     function openWindow() {
@@ -77,15 +92,15 @@
         closeBtn.style.opacity = "0.7";
         closeBtn.onclick = () => panel.remove();
 
-        const content = document.createElement("div");
-        content.style.flex = "1";
-        content.style.overflow = "auto";
-        content.style.padding = "16px";
-        content.textContent = "Loading...";
+        repoContent = document.createElement("div");
+        repoContent.style.flex = "1";
+        repoContent.style.overflow = "auto";
+        repoContent.style.padding = "16px";
+        repoContent.textContent = "Loading...";
 
         panel.appendChild(header);
         panel.appendChild(closeBtn);
-        panel.appendChild(content);
+        panel.appendChild(repoContent);
         document.body.appendChild(panel);
 
         enableDrag(panel, header);
@@ -94,7 +109,7 @@
             .then(res => res.json())
             .then(data => {
 
-                content.innerHTML = "";
+                repoContent.innerHTML = "";
 
                 data.plugins.forEach(repoPlugin => {
 
@@ -103,6 +118,7 @@
                     row.style.justifyContent = "space-between";
                     row.style.alignItems = "center";
                     row.style.marginBottom = "12px";
+                    row.setAttribute("data-link", repoPlugin.link);
 
                     const left = document.createElement("div");
                     left.style.display = "flex";
@@ -122,37 +138,30 @@
 
                     const installBtn = document.createElement("button");
 
-                    const installed = getPlugins().some(p => p.url === repoPlugin.link);
-
-                    installBtn.textContent = installed ? "Installed" : "Install";
-                    installBtn.disabled = installed;
-
                     installBtn.onclick = () => {
                         const plugins = getPlugins();
-
-                        plugins.push({
-                            name: repoPlugin.name,
-                            url: repoPlugin.link,
-                            author: repoPlugin.author || "Official",
-                            enabled: false
-                        });
-
-                        setPlugins(plugins);
-
-                        installBtn.textContent = "Installed";
-                        installBtn.disabled = true;
-
-                        refreshPluginManager();
+                        if (!plugins.some(p => p.url === repoPlugin.link)) {
+                            plugins.push({
+                                name: repoPlugin.name,
+                                url: repoPlugin.link,
+                                enabled: false
+                            });
+                            setPlugins(plugins);
+                            triggerManagerRefresh();
+                            updateInstallStates();
+                        }
                     };
 
                     row.appendChild(left);
                     row.appendChild(installBtn);
-                    content.appendChild(row);
+                    repoContent.appendChild(row);
                 });
+
+                updateInstallStates();
 
             })
             .catch(() => {
-                content.textContent = "Failed to load official repo.";
+                repoContent.textContent = "Failed to load official repo.";
             });
     }
 
@@ -172,6 +181,8 @@
             panel.style.bottom = "auto";
         });
     }
+
+    window.addEventListener("storage", updateInstallStates);
 
     const observer = new MutationObserver(() => injectButton());
     observer.observe(document.body, { childList: true, subtree: true });
