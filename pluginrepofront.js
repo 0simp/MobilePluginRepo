@@ -181,32 +181,10 @@
         repoContent.style.flex = "1";
         repoContent.style.overflow = "auto";
         repoContent.style.padding = "16px";
-        repoContent.style.paddingBottom = "70px";
-
-        const footer = document.createElement("div");
-        footer.style.position = "absolute";
-        footer.style.left = "0";
-        footer.style.right = "0";
-        footer.style.bottom = "0";
-        footer.style.height = "60px";
-        footer.style.display = "flex";
-        footer.style.alignItems = "center";
-        footer.style.paddingLeft = "16px";
-        footer.style.background = "linear-gradient(to top, rgba(0,0,0,0.6), transparent)";
-
-        const refetchBtn = document.createElement("button");
-        refetchBtn.textContent = "Refetch";
-        refetchBtn.onclick = () => {
-            refetchRepo();
-            updateInstallStates();
-        };
-
-        footer.appendChild(refetchBtn);
 
         panel.appendChild(header);
         panel.appendChild(closeBtn);
         panel.appendChild(repoContent);
-        panel.appendChild(footer);
         document.body.appendChild(panel);
 
         enableDrag(panel, header);
