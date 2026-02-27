@@ -111,8 +111,7 @@
         repoContent.innerHTML = "Loading...";
         fetch(OFFICIAL_REPO_URL)
             .then(res => res.json())
-            .then(data => renderRepo(data))
-            .catch(() => repoContent.innerHTML = "Failed to load official repo.");
+            .then(data => renderRepo(data));
     }
 
     function openWindow() {
@@ -159,23 +158,22 @@
         repoContent.style.flex = "1";
         repoContent.style.overflow = "auto";
         repoContent.style.padding = "16px";
-
-        const footer = document.createElement("div");
-        footer.style.padding = "12px 16px";
-        footer.style.borderTop = "1px solid rgba(255,255,255,0.08)";
-        footer.style.display = "flex";
-        footer.style.justifyContent = "flex-start";
+        repoContent.style.paddingBottom = "60px";
 
         const refetchBtn = document.createElement("button");
         refetchBtn.textContent = "Refetch";
-        refetchBtn.onclick = () => refetchRepo();
-
-        footer.appendChild(refetchBtn);
+        refetchBtn.style.position = "absolute";
+        refetchBtn.style.left = "16px";
+        refetchBtn.style.bottom = "16px";
+        refetchBtn.onclick = () => {
+            refetchRepo();
+            updateInstallStates();
+        };
 
         panel.appendChild(header);
         panel.appendChild(closeBtn);
         panel.appendChild(repoContent);
-        panel.appendChild(footer);
+        panel.appendChild(refetchBtn);
         document.body.appendChild(panel);
 
         enableDrag(panel, header);
@@ -202,7 +200,7 @@
 
     window.addEventListener("avia-plugin-list-changed", () => {
         if (document.getElementById("avia-official-repo-window")) {
-            refetchRepo();
+            updateInstallStates();
         }
     });
 
