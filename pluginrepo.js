@@ -109,9 +109,32 @@
     function refetchRepo() {
         if (!repoContent) return;
         repoContent.innerHTML = "Loading...";
-        fetch(OFFICIAL_REPO_URL)
-            .then(res => res.json())
-            .then(data => renderRepo(data));
+
+        function electronFetch() {
+            try {
+                const https = require("https");
+                https.get(OFFICIAL_REPO_URL, res => {
+                    let data = "";
+                    res.on("data", chunk => data += chunk);
+                    res.on("end", () => {
+                        renderRepo(JSON.parse(data));
+                    });
+                }).on("error", () => {
+                    repoContent.innerHTML = "Failed to fetch repo.";
+                });
+            } catch {
+                repoContent.innerHTML = "Failed to fetch repo.";
+            }
+        }
+
+        try {
+            fetch(OFFICIAL_REPO_URL)
+                .then(res => res.json())
+                .then(data => renderRepo(data))
+                .catch(() => electronFetch());
+        } catch {
+            electronFetch();
+        }
     }
 
     function openWindow() {
@@ -158,22 +181,32 @@
         repoContent.style.flex = "1";
         repoContent.style.overflow = "auto";
         repoContent.style.padding = "16px";
-        repoContent.style.paddingBottom = "60px";
+        repoContent.style.paddingBottom = "70px";
+
+        const footer = document.createElement("div");
+        footer.style.position = "absolute";
+        footer.style.left = "0";
+        footer.style.right = "0";
+        footer.style.bottom = "0";
+        footer.style.height = "60px";
+        footer.style.display = "flex";
+        footer.style.alignItems = "center";
+        footer.style.paddingLeft = "16px";
+        footer.style.background = "linear-gradient(to top, rgba(0,0,0,0.6), transparent)";
 
         const refetchBtn = document.createElement("button");
         refetchBtn.textContent = "Refetch";
-        refetchBtn.style.position = "absolute";
-        refetchBtn.style.left = "16px";
-        refetchBtn.style.bottom = "16px";
         refetchBtn.onclick = () => {
             refetchRepo();
             updateInstallStates();
         };
 
+        footer.appendChild(refetchBtn);
+
         panel.appendChild(header);
         panel.appendChild(closeBtn);
         panel.appendChild(repoContent);
-        panel.appendChild(refetchBtn);
+        panel.appendChild(footer);
         document.body.appendChild(panel);
 
         enableDrag(panel, header);
