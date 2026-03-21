@@ -2,7 +2,7 @@
   "sources": [
     {
       "name": "Avalilac's Themes",
-      "url": "https://avalilac.github.io/PluginRepo/themes/avalilac.js"
+      "url": "https://github.com/AvaLilac/ThemeRepo-Template/blob/main/themesbackend.js"
     }
   ]
 }
