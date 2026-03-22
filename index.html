@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Trusted Plugins Repo</title>
+<title>Trusted Plugins/Themes Repo</title>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet" />
 <style>
@@ -410,6 +410,73 @@
 
   .divider { height: 1px; background: var(--md-outline-variant); margin: 8px 0; }
 
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .theme-card {
+    background: var(--md-surface-container);
+    border: 1px solid var(--md-outline-variant);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .theme-card:hover {
+    background: var(--md-surface-container-high);
+    border-color: var(--md-outline);
+  }
+
+  .theme-preview {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: contain;
+    background: var(--md-surface-container-highest);
+    display: block;
+  }
+
+  .theme-preview-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--md-surface-container-highest);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--md-on-surface-variant);
+  }
+  .theme-preview-placeholder .material-symbols-outlined { font-size: 40px; opacity: 0.4; }
+
+  .theme-info {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .theme-info-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .theme-meta { flex: 1; min-width: 0; }
+
+  .theme-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md-on-surface);
+    word-break: break-word;
+  }
+
+  .theme-author {
+    font-size: 12px;
+    color: var(--md-on-surface-variant);
+    margin-top: 2px;
+  }
+
   @media (max-width: 600px) {
     .app-bar { padding: 0 16px; height: 56px; }
     .app-bar-title { font-size: 18px; }
@@ -496,7 +563,7 @@
 
 <div class="app-bar">
   <span class="material-symbols-outlined app-bar-icon">extension</span>
-  <span class="app-bar-title">Trusted Plugins Repo</span>
+  <span class="app-bar-title">Trusted Plugins/Themes Repo</span>
   <span class="app-bar-subtitle" id="version-chip">Avia Official</span>
 </div>
 
@@ -509,6 +576,17 @@
       <span class="badge" id="count-all">0</span>
     </div>
     <div class="nav-item" id="nav-new" onclick="setFilter('new')">
+      <span class="material-symbols-outlined">new_releases</span>
+      Recently added
+    </div>
+    <div class="divider"></div>
+    <div class="sidebar-label">Themes</div>
+    <div class="nav-item" id="nav-themes" onclick="setSection('themes')">
+      <span class="material-symbols-outlined">palette</span>
+      All themes
+      <span class="badge" id="count-themes">0</span>
+    </div>
+    <div class="nav-item" id="nav-themes-new" onclick="setRecentThemes()">
       <span class="material-symbols-outlined">new_releases</span>
       Recently added
     </div>
@@ -557,6 +635,12 @@
     </div>
     <span>Recent</span>
   </div>
+  <div class="mobile-nav-item" id="mnav-themes" onclick="setSection('themes')">
+    <div class="mobile-nav-pill">
+      <span class="material-symbols-outlined">palette</span>
+    </div>
+    <span>Themes</span>
+  </div>
   <div class="mobile-nav-item" onclick="window.open('https://avalilac.github.io/PluginRepo/pluginrepobackend.js', '_blank')">
     <div class="mobile-nav-pill">
       <span class="material-symbols-outlined">code</span>
@@ -572,8 +656,13 @@
 
 <script>
 const OFFICIAL_REPO_URL = "https://avalilac.github.io/PluginRepo/pluginrepobackend.js";
+const THEMES_REGISTRY_URL = "https://raw.githubusercontent.com/AvaLilac/PluginRepo/refs/heads/main/themebackend/themerepobackend.js";
+
 let allPlugins = [];
+let allThemes = [];
+let allThemesBySource = [];
 let activeFilter = 'all';
+let activeSection = 'plugins';
 let toastTimer = null;
 
 const content = document.getElementById('content');
@@ -605,13 +694,51 @@ function getIconForPlugin(name) {
   return 'extension';
 }
 
-function setFilter(f) {
-  activeFilter = f;
+function clearNavActive() {
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('nav-' + f)?.classList.add('active');
   document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+}
+
+function setSection(s) {
+  activeSection = s;
+  activeFilter = 'all';
+  mobileRecentFilter = 'all';
+  clearNavActive();
+  document.getElementById('nav-' + s)?.classList.add('active');
+  document.getElementById('mnav-' + s)?.classList.add('active');
+  document.getElementById('nav-new')?.classList.remove('active');
+  document.getElementById('mnav-new')?.classList.remove('active');
+  searchInput.placeholder = s === 'themes' ? 'Search themes or authors…' : 'Search plugins, authors, descriptions…';
+  searchInput.value = '';
+  if (s === 'themes') renderThemes();
+}
+
+function setFilter(f) {
+  activeSection = 'plugins';
+  activeFilter = f;
+  clearNavActive();
+  document.getElementById('nav-' + f)?.classList.add('active');
   document.getElementById('mnav-' + f)?.classList.add('active');
-  renderPlugins();
+  searchInput.placeholder = 'Search plugins, authors, descriptions…';
+
+  if (f === 'new' && window.innerWidth <= 600) {
+    mobileRecentFilter = 'all';
+    searchInput.placeholder = 'Search plugins or themes, authors, descriptions…';
+    renderMobileRecent();
+  } else {
+    renderPlugins();
+  }
+}
+
+function setRecentThemes() {
+  activeSection = 'themes';
+  activeFilter = 'new';
+  clearNavActive();
+  document.getElementById('nav-themes-new')?.classList.add('active');
+  document.getElementById('mnav-new')?.classList.add('active');
+  searchInput.placeholder = 'Search themes or authors…';
+  searchInput.value = '';
+  renderThemes();
 }
 
 function renderPlugins() {
@@ -661,7 +788,6 @@ function renderPlugins() {
         </button>
       </div>
     `;
-
     card.querySelector('.copy-btn').addEventListener('click', () => copyLink(p.link));
     grid.appendChild(card);
   });
@@ -670,15 +796,254 @@ function renderPlugins() {
   content.appendChild(grid);
 }
 
+function renderThemes() {
+  const query = searchInput.value.toLowerCase();
+
+  let pool;
+  if (activeFilter === 'new') {
+
+    pool = allThemesBySource.map(s => s.themes.slice(-1)).flat();
+  } else {
+    pool = allThemes;
+  }
+
+  const filtered = pool.filter(t =>
+    (t.name + ' ' + (t.author || '')).toLowerCase().includes(query)
+  );
+
+  document.getElementById('count-themes').textContent = allThemes.length;
+  resultCount.textContent = filtered.length + ' theme' + (filtered.length !== 1 ? 's' : '');
+
+  if (allThemes.length === 0) {
+    content.innerHTML = `<div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
+      <p>Fetching themes…</p>
+    </div>`;
+    return;
+  }
+
+  if (filtered.length === 0) {
+    content.innerHTML = `<div class="empty-state">
+      <span class="material-symbols-outlined">search_off</span>
+      <p>No themes match your search.</p>
+    </div>`;
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'theme-grid';
+
+  filtered.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'theme-card';
+
+    const preview = t.preview
+      ? `<img class="theme-preview" src="${escHtml(t.preview)}" alt="${escHtml(t.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const placeholder = `<div class="theme-preview-placeholder" style="${t.preview ? 'display:none' : ''}"><span class="material-symbols-outlined">palette</span></div>`;
+
+    card.innerHTML = `
+      ${preview}
+      ${placeholder}
+      <div class="theme-info">
+        <div class="theme-info-top">
+          <div class="theme-meta">
+            <div class="theme-name" title="${escHtml(t.name)}">${escHtml(t.name)}</div>
+            <div class="theme-author">by ${escHtml(t.author || 'Unknown')}</div>
+          </div>
+        </div>
+        <button class="btn-tonal download-btn" style="width:100%;justify-content:center;">
+          <span class="material-symbols-outlined">download</span>
+          Download
+        </button>
+      </div>
+    `;
+
+    card.querySelector('.download-btn').addEventListener('click', () => {
+      const btn = card.querySelector('.download-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined spin">progress_activity</span> Downloading…`;
+      fetch(t.download)
+        .then(r => r.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = t.name.replace(/\s+/g, '-').toLowerCase() + '.css';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showToast('Downloaded ' + t.name);
+          btn.disabled = false;
+          btn.innerHTML = `<span class="material-symbols-outlined">download</span> Download`;
+        })
+        .catch(() => {
+          showToast('Download failed — try again');
+          btn.disabled = false;
+          btn.innerHTML = `<span class="material-symbols-outlined">download</span> Download`;
+        });
+    });
+
+    grid.appendChild(card);
+  });
+
+  content.innerHTML = '';
+  content.appendChild(grid);
+}
+
+let mobileRecentFilter = 'all';
+
+function renderMobileRecent() {
+  const query = searchInput.value.toLowerCase();
+
+  const recentPlugins = allPlugins.slice(-4).reverse().filter(p =>
+    (p.name + ' ' + (p.author || '') + ' ' + (p.description || '')).toLowerCase().includes(query)
+  );
+
+  const recentThemes = allThemesBySource.map(s => s.themes.slice(-1)).flat().filter(t =>
+    (t.name + ' ' + (t.author || '')).toLowerCase().includes(query)
+  );
+
+  const showPlugins = mobileRecentFilter === 'all' || mobileRecentFilter === 'plugins';
+  const showThemes = mobileRecentFilter === 'all' || mobileRecentFilter === 'themes';
+
+  const total = (showPlugins ? recentPlugins.length : 0) + (showThemes ? recentThemes.length : 0);
+  resultCount.textContent = total + ' recent';
+
+  content.innerHTML = '';
+
+  const toggle = document.createElement('div');
+  toggle.style.cssText = 'display:flex;gap:8px;margin-bottom:16px;';
+  ['all', 'plugins', 'themes'].forEach(f => {
+    const btn = document.createElement('button');
+    btn.textContent = f.charAt(0).toUpperCase() + f.slice(1);
+    btn.style.cssText = `height:32px;padding:0 16px;border-radius:100px;border:1px solid var(--md-outline-variant);background:${mobileRecentFilter === f ? 'var(--md-secondary-container)' : 'transparent'};color:${mobileRecentFilter === f ? 'var(--md-on-primary-container)' : 'var(--md-on-surface-variant)'};font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:background 0.15s;`;
+    btn.addEventListener('click', () => {
+      mobileRecentFilter = f;
+      if (f === 'plugins') searchInput.placeholder = 'Search plugins, authors, descriptions…';
+      else if (f === 'themes') searchInput.placeholder = 'Search themes or authors…';
+      else searchInput.placeholder = 'Search plugins or themes, authors, descriptions…';
+      renderMobileRecent();
+    });
+    toggle.appendChild(btn);
+  });
+  content.appendChild(toggle);
+
+  if (total === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `<span class="material-symbols-outlined">search_off</span><p>No recent items match your search.</p>`;
+    content.appendChild(empty);
+    return;
+  }
+
+  if (showPlugins && recentPlugins.length > 0) {
+    const heading = document.createElement('div');
+    heading.style.cssText = 'font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--md-on-surface-variant);padding:0 0 8px;';
+    heading.textContent = 'Plugins';
+    content.appendChild(heading);
+
+    const grid = document.createElement('div');
+    grid.className = 'plugin-grid';
+    recentPlugins.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'plugin-card';
+      card.innerHTML = `
+        <div class="plugin-header">
+          <div class="plugin-icon"><span class="material-symbols-outlined">${getIconForPlugin(p.name)}</span></div>
+          <div class="plugin-meta">
+            <div class="plugin-name" title="${escHtml(p.name)}">${escHtml(p.name)}</div>
+            <div class="plugin-author">by ${escHtml(p.author || 'Unknown')}</div>
+          </div>
+        </div>
+        ${p.description ? `<div class="plugin-desc">${escHtml(p.description)}</div>` : ''}
+        <div class="plugin-actions">
+          <button class="btn-tonal copy-btn">
+            <span class="material-symbols-outlined">content_copy</span>Copy link
+          </button>
+        </div>`;
+      card.querySelector('.copy-btn').addEventListener('click', () => copyLink(p.link));
+      grid.appendChild(card);
+    });
+    content.appendChild(grid);
+  }
+
+  if (showThemes && recentThemes.length > 0) {
+    const heading = document.createElement('div');
+    heading.style.cssText = 'font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--md-on-surface-variant);padding:16px 0 8px;';
+    heading.textContent = 'Themes';
+    content.appendChild(heading);
+
+    const grid = document.createElement('div');
+    grid.className = 'theme-grid';
+    recentThemes.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'theme-card';
+      const preview = t.preview
+        ? `<img class="theme-preview" src="${escHtml(t.preview)}" alt="${escHtml(t.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        : '';
+      const placeholder = `<div class="theme-preview-placeholder" style="${t.preview ? 'display:none' : ''}"><span class="material-symbols-outlined">palette</span></div>`;
+      card.innerHTML = `
+        ${preview}${placeholder}
+        <div class="theme-info">
+          <div class="theme-info-top">
+            <div class="theme-meta">
+              <div class="theme-name">${escHtml(t.name)}</div>
+              <div class="theme-author">by ${escHtml(t.author || 'Unknown')}</div>
+            </div>
+          </div>
+          <button class="btn-tonal download-btn" style="width:100%;justify-content:center;">
+            <span class="material-symbols-outlined">download</span>Download
+          </button>
+        </div>`;
+      card.querySelector('.download-btn').addEventListener('click', () => {
+        const btn = card.querySelector('.download-btn');
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined spin">progress_activity</span> Downloading…`;
+        fetch(t.download)
+          .then(r => r.blob())
+          .then(blob => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = t.name.replace(/\s+/g, '-').toLowerCase() + '.css';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Downloaded ' + t.name);
+            btn.disabled = false;
+            btn.innerHTML = `<span class="material-symbols-outlined">download</span> Download`;
+          })
+          .catch(() => {
+            showToast('Download failed — try again');
+            btn.disabled = false;
+            btn.innerHTML = `<span class="material-symbols-outlined">download</span> Download`;
+          });
+      });
+      grid.appendChild(card);
+    });
+    content.appendChild(grid);
+  }
+}
+
 function escHtml(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function refetchRepo() {
-  content.innerHTML = `<div class="loading-state">
-    <span class="material-symbols-outlined spin">progress_activity</span>
-    <p>Fetching plugins…</p>
-  </div>`;
+  if (activeSection === 'themes') {
+    content.innerHTML = `<div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
+      <p>Fetching themes…</p>
+    </div>`;
+  } else {
+    content.innerHTML = `<div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
+      <p>Fetching plugins…</p>
+    </div>`;
+  }
   resultCount.textContent = 'Loading…';
 
   const icon = document.getElementById('refresh-icon');
@@ -688,20 +1053,56 @@ function refetchRepo() {
     .then(r => r.json())
     .then(data => {
       allPlugins = data.plugins || [];
-      renderPlugins();
+      if (activeSection === 'plugins') renderPlugins();
+    })
+    .catch(() => {
+      if (activeSection === 'plugins') {
+        content.innerHTML = `<div class="error-state">
+          <span class="material-symbols-outlined">cloud_off</span>
+          <p>Couldn't reach the plugin repo.<br>Check your connection and try again.</p>
+        </div>`;
+        resultCount.textContent = 'Error';
+      }
+    });
+
+  fetch(THEMES_REGISTRY_URL)
+    .then(r => r.json())
+    .then(async registry => {
+      const sources = registry.sources || [];
+      const results = await Promise.allSettled(
+        sources.map(s => fetch(s.url).then(r => r.json()))
+      );
+      allThemes = [];
+      allThemesBySource = [];
+      results.forEach(r => {
+        if (r.status === 'fulfilled') {
+          const themes = r.value.themes || [];
+          allThemes.push(...themes);
+          allThemesBySource.push({ themes });
+        }
+      });
+      document.getElementById('count-themes').textContent = allThemes.length;
+      if (activeSection === 'themes') renderThemes();
       icon.classList.remove('spin');
     })
     .catch(() => {
       icon.classList.remove('spin');
-      content.innerHTML = `<div class="error-state">
-        <span class="material-symbols-outlined">cloud_off</span>
-        <p>Couldn't reach the plugin repo.<br>Check your connection and try again.</p>
-      </div>`;
-      resultCount.textContent = 'Error';
+      if (activeSection === 'themes') {
+        content.innerHTML = `<div class="error-state">
+          <span class="material-symbols-outlined">cloud_off</span>
+          <p>Couldn't reach the themes registry.<br>Check your connection and try again.</p>
+        </div>`;
+        resultCount.textContent = 'Error';
+      }
     });
 }
 
-searchInput.addEventListener('input', renderPlugins);
+searchInput.addEventListener('input', () => {
+  if (activeSection === 'themes') renderThemes();
+  else if (activeFilter === 'new' && window.innerWidth <= 600) renderMobileRecent();
+  else renderPlugins();
+});
+
 refetchRepo();
 </script>
 </body>
