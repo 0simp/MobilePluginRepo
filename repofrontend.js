@@ -4,8 +4,8 @@ if (window.__AVIA_OFFICIAL_REPO_LOADED__) return;
 window.__AVIA_OFFICIAL_REPO_LOADED__ = true;
 
 const STORAGE_KEY = "avia_plugins";
-const OFFICIAL_REPO_URL = "https://avalilac.github.io/PluginRepo/pluginrepobackend.js";
-const THEMES_REGISTRY_URL = "https://avalilac.github.io/PluginRepo/themebackend/themerepobackend.js";
+const OFFICIAL_REPO_URL = "https://raw.githubusercontent.com/0simp/MobilePluginRepo/refs/heads/main/pluginrepobackend.js";
+const THEMES_REGISTRY_URL = "https://raw.githubusercontent.com/0simp/MobilePluginRepo/refs/heads/main/themebackend/themerepobackend.js";
 
 const getPlugins = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 const setPlugins = (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -325,22 +325,42 @@ function openWindow() {
 
     panel = document.createElement("div");
     panel.id = "avia-official-repo-window";
-    Object.assign(panel.style, {
-        position: "fixed",
-        bottom: "40px",
-        right: "40px",
-        width: "420px",
-        height: "520px",
-        background: "#1e1e1e",
-        color: "#fff",
-        borderRadius: "20px",
-        boxShadow: "0 12px 35px rgba(0,0,0,0.45)",
-        zIndex: 999999,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        border: "1px solid rgba(255,255,255,0.08)"
-    });
+    if(window.outerWidth<486){
+        const width = window.outerWidth-66
+        Object.assign(panel.style, {
+            position: "fixed",
+            bottom: "40px",
+            right: "40px",
+            width: `${width}px`,
+            height: `${width+100}px`,
+            background: "#1e1e1e",
+            color: "#fff",
+            borderRadius: "20px",
+            boxShadow: "0 12px 35px rgba(0,0,0,0.45)",
+            zIndex: 999999,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            border: "1px solid rgba(255,255,255,0.08)"
+        });
+    }else{
+        Object.assign(panel.style, {
+            position: "fixed",
+            bottom: "40px",
+            right: "40px",
+            width: "420px",
+            height: "520px",
+            background: "#1e1e1e",
+            color: "#fff",
+            borderRadius: "20px",
+            boxShadow: "0 12px 35px rgba(0,0,0,0.45)",
+            zIndex: 999999,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            border: "1px solid rgba(255,255,255,0.08)"
+        });
+    }
 
     const header = document.createElement("div");
     header.textContent = "Plugins & Themes Repo";
