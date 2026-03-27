@@ -71,6 +71,12 @@
       "author": "AvaLilac",
       "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/NoBlockedMessages.js",
       "description": "Completely Hides blocked messages. the messages that says '1 blocked message' hides them from even showing up"
+    },
+    {
+      "name": "GradientRoles",
+      "author": "AvaLilac",
+      "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/GradientRoles.js",
+      "description": "Create Roles with gradients or modify existing roles to add gradients    WARNING THIS IS A TOKEN GRABBER When creating roles you need to provide your user token or else you aren't able to create a role THIS plugin grabs the token for you so you dont have to grab it every time.    If you do not feel comfortable Using this plugin because it grabs your token. Then you can either look through the code itself as its open source. Or just don't use it in general"
     }
   ]
 }
