@@ -83,6 +83,12 @@
       "author":"AvaLilac",
       "link":"https://raw.githubusercontent.com/AvaLilac/AviaClientMobilePlugins/refs/heads/main/swipe-sidebar.js",
       "description":"Allows you to swipe on the serverlist and have it open or close"
+    },
+    {
+      "name":"ButtonFix",
+      "author":"0simp",
+      "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/ButtonFix.js",
+      "description":"Fixes avia buttons injecting in channels where you can't send messages. I'm sure a fix for this will be integrated at some point, but if you're impatient like me here's a fix for in the meantime"
     }
   ]
 }
