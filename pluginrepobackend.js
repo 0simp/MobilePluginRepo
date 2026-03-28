@@ -79,7 +79,7 @@
       "description": "Create Roles with gradients or modify existing roles to add gradients    WARNING THIS IS A TOKEN GRABBER When creating roles you need to provide your user token or else you aren't able to create a role THIS plugin grabs the token for you so you dont have to grab it every time.    If you do not feel comfortable Using this plugin because it grabs your token. Then you can either look through the code itself as its open source. Or just don't use it in general"
     },
     {
-      name:"SwipeSidebar",
+      "name":"SwipeSidebar",
       "author":"AvaLilac",
       "link":"https://raw.githubusercontent.com/AvaLilac/AviaClientMobilePlugins/refs/heads/main/swipe-sidebar.js",
       "description":"Allows you to swipe on the serverlist and have it open or close"
