@@ -89,6 +89,12 @@
       "author":"0simp",
       "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/ButtonFix.js",
       "description":"Fixes avia buttons injecting in channels where you can't send messages. I'm sure a fix for this will be integrated at some point, but if you're impatient like me here's a fix for in the meantime"
+    },
+    {
+      "name":"ShiftNewLine",
+      "author":"0simp",
+      "link":"https://raw.githubusercontent.com/0simp/AviaMobilePlugins/refs/heads/main/ShiftNewLine.js",
+      "description":"Makes holding shift and enter insert a new line in your message instead of sending it. Small issue: it moves your cursor to the beginning of the text so you have to move it back manually."
     }
   ]
 }
