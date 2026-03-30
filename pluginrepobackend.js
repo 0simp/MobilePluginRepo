@@ -101,6 +101,12 @@
       "author":"0simp",
       "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/GifFix.js",
       "description":"Fixes gifs and animated emojis not animating when they should"
+    },
+    {
+      "name":"HideImageLinks",
+      "author":"0simp",
+      "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/HideImageLinks.js",
+      "description":"Hides image links if they're the only content in the message"
     }
   ]
 }
