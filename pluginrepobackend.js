@@ -95,6 +95,12 @@
       "author":"0simp",
       "link":"https://raw.githubusercontent.com/0simp/AviaMobilePlugins/refs/heads/main/ShiftNewLine.js",
       "description":"Makes holding shift and enter insert a new line in your message instead of sending it. Small issue: it moves your cursor to the beginning of the text so you have to move it back manually."
+    },
+    {
+      "name":"GifFix",
+      "author":"0simp",
+      "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/GifFix.js",
+      "description":"Fixes gifs and animated emojis not animating when they should"
     }
   ]
 }
