@@ -79,24 +79,6 @@
       "description": "Create Roles with gradients or modify existing roles to add gradients    WARNING THIS IS A TOKEN GRABBER When creating roles you need to provide your user token or else you aren't able to create a role THIS plugin grabs the token for you so you dont have to grab it every time.    If you do not feel comfortable Using this plugin because it grabs your token. Then you can either look through the code itself as its open source. Or just don't use it in general"
     },
     {
-      "name":"SwipeSidebar",
-      "author":"AvaLilac",
-      "link":"https://raw.githubusercontent.com/AvaLilac/AviaClientMobilePlugins/refs/heads/main/swipe-sidebar.js",
-      "description":"Allows you to swipe on the serverlist and have it open or close"
-    },
-    {
-      "name":"ButtonFix",
-      "author":"0simp",
-      "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/ButtonFix.js",
-      "description":"Fixes avia buttons injecting in channels where you can't send messages. I'm sure a fix for this will be integrated at some point, but if you're impatient like me here's a fix for in the meantime"
-    },
-    {
-      "name":"ShiftNewLine",
-      "author":"0simp",
-      "link":"https://raw.githubusercontent.com/0simp/AviaMobilePlugins/refs/heads/main/ShiftNewLine.js",
-      "description":"Makes holding shift and enter insert a new line in your message instead of sending it. Small issue: it moves your cursor to the beginning of the text so you have to move it back manually."
-    },
-    {
       "name":"GifFix",
       "author":"0simp",
       "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/GifFix.js",
@@ -107,6 +89,24 @@
       "author":"0simp",
       "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/HideImageLinks.js",
       "description":"Hides image links if they're the only content in the message"
+    },
+    {
+      "name": "EmojiSounds",
+      "author": "0simp",
+      "link": "https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/EmojiSounds.js",
+      "description": "Allows you to set sounds to be played when certain emojis are sent in chat. After enabling the plugin, go into your user settings and click on the button that says '(Avia) Emoji Sounds Settings'. Then, paste the emoji and the direct link to the sound you want in the appropriate boxes."
+    },
+    {
+      "name": "Devtools",
+      "author": "AvaLilac",
+      "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/ConsoleDevTools.js",
+      "description": "Get Full access to the browsers devtools console inside AviaClientDesktop \"works on web\""
+    },
+    {
+      "name": "Masquerade",
+      "author": "AvaLilac x 0simp",
+      "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/masquerade.js",
+      "description": "Exactly what the name says. Allows you to change your pfp/avatar before sending a message without modifying your profile. has the ability to impersonate anyone by clicking onto their profile, clicking the 3 dots. Then clicking impersonate."
     }
   ]
 }
