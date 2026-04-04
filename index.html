@@ -173,6 +173,7 @@
     border-bottom: 1px solid var(--md-outline-variant);
     background: var(--md-surface);
     flex-shrink: 0;
+    flex-wrap: wrap;
   }
 
   .search-field {
@@ -234,6 +235,57 @@
     padding: 6px 14px;
     background: var(--md-surface-variant);
     border-radius: var(--radius-full);
+  }
+
+  .sort-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding-top: 4px;
+  }
+
+  .sort-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--md-on-surface-variant);
+    white-space: nowrap;
+    padding-right: 2px;
+  }
+
+  .sort-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .sort-chip {
+    height: 32px;
+    padding: 0 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--md-outline-variant);
+    background: transparent;
+    color: var(--md-on-surface-variant);
+    font-family: 'Google Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .sort-chip .material-symbols-outlined { font-size: 16px; }
+  .sort-chip:hover {
+    background: var(--md-state-hover);
+    border-color: var(--md-outline);
+  }
+  .sort-chip.active {
+    background: var(--md-secondary-container);
+    color: var(--md-on-primary-container);
+    border-color: transparent;
   }
 
   .content {
@@ -360,6 +412,10 @@
     transition: opacity 0.15s;
   }
   .btn-tonal:hover { opacity: 0.85; }
+  .btn-tonal:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
   .btn-tonal .material-symbols-outlined { font-size: 16px; }
 
   .copy-toast {
@@ -489,12 +545,15 @@
     .toolbar { padding: 12px 16px; gap: 8px; flex-wrap: wrap; }
     .search-field { max-width: 100%; order: 1; width: 100%; }
     .toolbar-actions { order: 2; width: 100%; justify-content: space-between; }
+    .sort-bar { order: 3; }
 
     .content { padding: 12px 16px; }
 
     .plugin-grid { grid-template-columns: 1fr; gap: 10px; }
 
     .plugin-card { padding: 16px; }
+
+    .plugin-actions { flex-wrap: wrap; }
 
     .mobile-nav {
       display: flex;
@@ -610,6 +669,24 @@
           <span class="material-symbols-outlined" id="refresh-icon">refresh</span>
         </button>
       </div>
+
+      <div class="sort-bar" id="sort-bar">
+        <span class="sort-label">Order:</span>
+        <div class="sort-chips">
+          <button class="sort-chip" id="sort-oldest" onclick="setPluginSort('oldest')">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            Oldest
+          </button>
+          <button class="sort-chip" id="sort-newest" onclick="setPluginSort('newest')">
+            <span class="material-symbols-outlined">arrow_downward</span>
+            Newest
+          </button>
+          <button class="sort-chip" id="sort-shuffle" onclick="setPluginSort('shuffle')">
+            <span class="material-symbols-outlined">shuffle</span>
+            Shuffle
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="content" id="content">
@@ -663,12 +740,15 @@ let allThemes = [];
 let allThemesBySource = [];
 let activeFilter = 'all';
 let activeSection = 'plugins';
+let pluginSort = 'oldest';
+let shuffledPlugins = [];
 let toastTimer = null;
 
 const content = document.getElementById('content');
 const searchInput = document.getElementById('search-input');
 const resultCount = document.getElementById('result-count');
 const countAll = document.getElementById('count-all');
+const sortBar = document.getElementById('sort-bar');
 
 function showToast(msg) {
   const toast = document.getElementById('toast');
@@ -682,21 +762,134 @@ function copyLink(url) {
   navigator.clipboard.writeText(url).then(() => showToast('Link copied to clipboard'));
 }
 
-function getIconForPlugin(name) {
-  const n = name.toLowerCase();
-  if (n.includes('theme') || n.includes('style') || n.includes('ui')) return 'palette';
-  if (n.includes('music') || n.includes('spotify') || n.includes('audio')) return 'music_note';
-  if (n.includes('translate') || n.includes('lang')) return 'translate';
-  if (n.includes('search')) return 'search';
-  if (n.includes('notif')) return 'notifications';
-  if (n.includes('gif') || n.includes('image') || n.includes('media')) return 'image';
-  if (n.includes('chat') || n.includes('msg')) return 'chat';
+function downloadPlugin(plugin, btn) {
+  btn.disabled = true;
+  btn.innerHTML = `<span class="material-symbols-outlined spin">progress_activity</span> Downloading…`;
+
+  fetch(plugin.link)
+    .then(r => {
+      if (!r.ok) throw new Error('Network response was not ok');
+      return r.blob();
+    })
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const urlParts = plugin.link.split('/');
+      const rawFilename = urlParts[urlParts.length - 1] || plugin.name.replace(/\s+/g, '-').toLowerCase() + '.js';
+      a.download = rawFilename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded ' + plugin.name);
+      btn.disabled = false;
+      btn.innerHTML = `<span class="material-symbols-outlined">download</span> Download`;
+    })
+    .catch(() => {
+      showToast('Download failed — try again');
+      btn.disabled = false;
+      btn.innerHTML = `<span class="material-symbols-outlined">download</span> Download`;
+    });
+}
+
+function getIconForPlugin(p) {
+  if (p.icon) return p.icon;
+  const n = (p.name + ' ' + (p.description || '')).toLowerCase();
+  if (/music|spotify|audio|song|playlist|soundcloud|lastfm|scrobble/.test(n)) return 'music_note';
+  if (/video|youtube|movie|film|stream|vod|twitch|clip/.test(n)) return 'movie';
+  if (/radio|podcast|broadcast/.test(n)) return 'radio';
+  if (/\bgif\b|tenor|giphy/.test(n)) return 'gif_box';
+  if (/image|photo|picture|gallery|imgur/.test(n)) return 'image';
+  if (/\btv\b|television|plex|jellyfin|emby/.test(n)) return 'tv';
+  if (/theme|style|\bui\b|colour|appearance|skin|dark mode|light mode/.test(n)) return 'palette';
+  if (/font|typography/.test(n)) return 'format_size';
+  if (/\bdark\b|night|amoled|\bdim\b/.test(n)) return 'dark_mode';
+  if (/animation|motion|transition|particle|\bfade\b/.test(n)) return 'animation';
+  if (/background|wallpaper|banner|backdrop/.test(n)) return 'wallpaper';
+  if (/emoji|emote|reaction|sticker/.test(n)) return 'emoji_emotions';
+  if (/\bchat\b|message|\bmsg\b|\bdm\b|\breply\b/.test(n)) return 'chat';
+  if (/\bgroup\b|server|guild|community|channel/.test(n)) return 'group';
+  if (/\bcall\b|voice|voip/.test(n)) return 'call';
+  if (/video call|screenshare|webcam/.test(n)) return 'videocam';
+  if (/notif|notification|alert|ping|mention/.test(n)) return 'notifications';
+  if (/\bmail\b|email|inbox/.test(n)) return 'mail';
+  if (/todo|task|checklist|reminder/.test(n)) return 'task';
+  if (/calendar|schedule|\bevent\b/.test(n)) return 'calendar_month';
+  if (/\btimer\b|stopwatch|countdown|pomodoro/.test(n)) return 'timer';
+  if (/\bnote\b|notepad|journal|diary/.test(n)) return 'edit_note';
+  if (/snippet|clipboard|paste|template/.test(n)) return 'snippet_folder';
+  if (/calculat|\bmath\b/.test(n)) return 'calculate';
+  if (/\bcode\b|developer|syntax|markdown/.test(n)) return 'code';
+  if (/terminal|console|shell|command/.test(n)) return 'terminal';
+  if (/\bapi\b|webhook|endpoint|integration/.test(n)) return 'api';
+  if (/database|\bdb\b|\bsql\b/.test(n)) return 'database';
+  if (/\bcloud\b|\bsync\b|backup/.test(n)) return 'cloud';
+  if (/\bsearch\b|lookup|query/.test(n)) return 'search';
+  if (/translat|language/.test(n)) return 'translate';
+  if (/\binfo\b|\bhelp\b|\bguide\b|\bfaq\b|\bwiki\b|\bdocs\b/.test(n)) return 'info';
+  if (/stats|chart|graph|analytics|dashboard|metrics/.test(n)) return 'bar_chart';
+  if (/\brss\b|feed|headlines/.test(n)) return 'rss_feed';
+  if (/\blink\b|\burl\b|\bembed\b|rich presence|preview/.test(n)) return 'link';
+  if (/password|\bauth\b|\b2fa\b|\botp\b|secure|privacy/.test(n)) return 'lock';
+  if (/shield|anticha|moderat|protect/.test(n)) return 'shield';
+  if (/admin|moderator|permissions|\brole\b/.test(n)) return 'admin_panel_settings';
+  if (/\bbadge\b|account|profile|\buser\b|avatar/.test(n)) return 'manage_accounts';
+  if (/\bdice\b|casino|slots|roulette/.test(n)) return 'casino';
+  if (/gaming|esports|steam|leaderboard|\bxp\b|\blevel\b/.test(n)) return 'sports_esports';
+  if (/giveaway|birthday|celebrat|party/.test(n)) return 'celebration';
+  if (/\bquiz\b|trivia/.test(n)) return 'quiz';
+  if (/economy|coins|currency|\bshop\b|points|reward/.test(n)) return 'redeem';
+  if (/lyrics|karaoke/.test(n)) return 'music_video';
+  if (/uppercase|capitaliz|autocorrect|grammar|spell/.test(n)) return 'spellcheck';
+  if (/timezone|time zone/.test(n)) return 'schedule';
+  if (/keyboard|shortcut|hotkey|keybind/.test(n)) return 'keyboard';
+  if (/gradient|colour|color/.test(n)) return 'gradient';
+  if (/\bhome\b|\bbutton\b|\bicon\b|\blogo\b/.test(n)) return 'home';
+  if (/devtools|inspect|console/.test(n)) return 'developer_mode';
+  if (/\bblock\b|\bhide\b|suppress|silent/.test(n)) return 'block';
+  if (/scroll|smooth/.test(n)) return 'swap_vert';
+  if (/member|panel|sidebar/.test(n)) return 'people';
+  if (/duplicate|\bdupe\b|\bfix\b|\bglitch\b/.test(n)) return 'build';
+  if (/impersonat|masquerade|\bpfp\b|disguise/.test(n)) return 'theater_comedy';
+  if (/\bsound\b|\bnoise\b|\bsfx\b/.test(n)) return 'volume_up';
+  if (/favourites|favorites|bookmark|saved/.test(n)) return 'bookmark';
+  if (/attach|file|copy link/.test(n)) return 'attach_file';
   return 'extension';
+}
+
+function setPluginSort(mode) {
+  pluginSort = mode;
+  if (mode === 'shuffle') {
+    shuffledPlugins = [...allPlugins].sort(() => Math.random() - 0.5);
+  }
+  updateSortChips();
+  renderPlugins();
+}
+
+function updateSortChips() {
+  ['oldest', 'newest', 'shuffle'].forEach(id => {
+    const el = document.getElementById('sort-' + id);
+    if (el) el.classList.toggle('active', pluginSort === id);
+  });
+}
+
+function getSortedPlugins(pool) {
+  if (pluginSort === 'newest') return [...pool].reverse();
+  if (pluginSort === 'shuffle') {
+    const poolSet = new Set(pool.map(p => p.link));
+    return shuffledPlugins.filter(p => poolSet.has(p.link));
+  }
+  return pool;
 }
 
 function clearNavActive() {
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+}
+
+function setSortBarVisible(visible) {
+  sortBar.style.display = visible ? 'flex' : 'none';
 }
 
 function setSection(s) {
@@ -710,7 +903,9 @@ function setSection(s) {
   document.getElementById('mnav-new')?.classList.remove('active');
   searchInput.placeholder = s === 'themes' ? 'Search themes or authors…' : 'Search plugins, authors, descriptions…';
   searchInput.value = '';
+  setSortBarVisible(s === 'plugins');
   if (s === 'themes') renderThemes();
+  else renderPlugins();
 }
 
 function setFilter(f) {
@@ -720,10 +915,12 @@ function setFilter(f) {
   document.getElementById('nav-' + f)?.classList.add('active');
   document.getElementById('mnav-' + f)?.classList.add('active');
   searchInput.placeholder = 'Search plugins, authors, descriptions…';
+  setSortBarVisible(true);
 
   if (f === 'new' && window.innerWidth <= 600) {
     mobileRecentFilter = 'all';
     searchInput.placeholder = 'Search plugins or themes, authors, descriptions…';
+    setSortBarVisible(false);
     renderMobileRecent();
   } else {
     renderPlugins();
@@ -738,14 +935,49 @@ function setRecentThemes() {
   document.getElementById('mnav-new')?.classList.add('active');
   searchInput.placeholder = 'Search themes or authors…';
   searchInput.value = '';
+  setSortBarVisible(false);
   renderThemes();
+}
+
+function buildPluginCard(p) {
+  const card = document.createElement('div');
+  card.className = 'plugin-card';
+  card.innerHTML = `
+    <div class="plugin-header">
+      <div class="plugin-icon">
+        <span class="material-symbols-outlined">${getIconForPlugin(p)}</span>
+      </div>
+      <div class="plugin-meta">
+        <div class="plugin-name" title="${escHtml(p.name)}">${escHtml(p.name)}</div>
+        <div class="plugin-author">by ${escHtml(p.author || 'Unknown')}</div>
+      </div>
+    </div>
+    ${p.description ? `<div class="plugin-desc">${escHtml(p.description)}</div>` : ''}
+    <div class="plugin-actions">
+      <button class="btn-tonal copy-btn" data-link="${escHtml(p.link)}">
+        <span class="material-symbols-outlined">content_copy</span>
+        Copy link
+      </button>
+      <button class="btn-tonal download-btn">
+        <span class="material-symbols-outlined">download</span>
+        Download
+      </button>
+    </div>
+  `;
+  card.querySelector('.copy-btn').addEventListener('click', () => copyLink(p.link));
+  card.querySelector('.download-btn').addEventListener('click', function() {
+    downloadPlugin(p, this);
+  });
+  return card;
 }
 
 function renderPlugins() {
   const query = searchInput.value.toLowerCase();
   let pool = activeFilter === 'new'
-    ? allPlugins.slice(-4).reverse()
+    ? allPlugins.slice(-4)
     : allPlugins;
+
+  pool = getSortedPlugins(pool);
 
   let filtered = pool.filter(p =>
     (p.name + ' ' + (p.author || '') + ' ' + (p.description || '')).toLowerCase().includes(query)
@@ -766,31 +998,7 @@ function renderPlugins() {
 
   const grid = document.createElement('div');
   grid.className = 'plugin-grid';
-
-  filtered.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'plugin-card';
-    card.innerHTML = `
-      <div class="plugin-header">
-        <div class="plugin-icon">
-          <span class="material-symbols-outlined">${getIconForPlugin(p.name)}</span>
-        </div>
-        <div class="plugin-meta">
-          <div class="plugin-name" title="${escHtml(p.name)}">${escHtml(p.name)}</div>
-          <div class="plugin-author">by ${escHtml(p.author || 'Unknown')}</div>
-        </div>
-      </div>
-      ${p.description ? `<div class="plugin-desc">${escHtml(p.description)}</div>` : ''}
-      <div class="plugin-actions">
-        <button class="btn-tonal copy-btn" data-link="${escHtml(p.link)}">
-          <span class="material-symbols-outlined">content_copy</span>
-          Copy link
-        </button>
-      </div>
-    `;
-    card.querySelector('.copy-btn').addEventListener('click', () => copyLink(p.link));
-    grid.appendChild(card);
-  });
+  filtered.forEach(p => grid.appendChild(buildPluginCard(p)));
 
   content.innerHTML = '';
   content.appendChild(grid);
@@ -801,7 +1009,6 @@ function renderThemes() {
 
   let pool;
   if (activeFilter === 'new') {
-
     pool = allThemesBySource.map(s => s.themes.slice(-1)).flat();
   } else {
     pool = allThemes;
@@ -946,26 +1153,7 @@ function renderMobileRecent() {
 
     const grid = document.createElement('div');
     grid.className = 'plugin-grid';
-    recentPlugins.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'plugin-card';
-      card.innerHTML = `
-        <div class="plugin-header">
-          <div class="plugin-icon"><span class="material-symbols-outlined">${getIconForPlugin(p.name)}</span></div>
-          <div class="plugin-meta">
-            <div class="plugin-name" title="${escHtml(p.name)}">${escHtml(p.name)}</div>
-            <div class="plugin-author">by ${escHtml(p.author || 'Unknown')}</div>
-          </div>
-        </div>
-        ${p.description ? `<div class="plugin-desc">${escHtml(p.description)}</div>` : ''}
-        <div class="plugin-actions">
-          <button class="btn-tonal copy-btn">
-            <span class="material-symbols-outlined">content_copy</span>Copy link
-          </button>
-        </div>`;
-      card.querySelector('.copy-btn').addEventListener('click', () => copyLink(p.link));
-      grid.appendChild(card);
-    });
+    recentPlugins.forEach(p => grid.appendChild(buildPluginCard(p)));
     content.appendChild(grid);
   }
 
@@ -1053,6 +1241,7 @@ function refetchRepo() {
     .then(r => r.json())
     .then(data => {
       allPlugins = data.plugins || [];
+      shuffledPlugins = [...allPlugins].sort(() => Math.random() - 0.5);
       if (activeSection === 'plugins') renderPlugins();
     })
     .catch(() => {
@@ -1103,6 +1292,8 @@ searchInput.addEventListener('input', () => {
   else renderPlugins();
 });
 
+updateSortChips();
+setSortBarVisible(true);
 refetchRepo();
 </script>
 </body>
