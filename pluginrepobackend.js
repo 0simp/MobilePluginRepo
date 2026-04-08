@@ -7,12 +7,6 @@
       "description": " Auto-capitalizes sentences while you type."
     },
     {
-      "name": "MobileCSSPlus",
-      "author": "0simp",
-      "link": "https://raw.githubusercontent.com/0simp/AviaMobilePlugins/refs/heads/main/MobileCSSPlus.js",
-      "description": "Mobile optimised version of Monaco CSS. Adds a clear and paste button because select all and paste functions don't work in the editor on mobile"
-    },
-    {
       "name": "ForceApparence",
       "author": "AvaLilac",
       "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/ForceApparence.js",
@@ -107,6 +101,18 @@
       "author": "AvaLilac x 0simp",
       "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/masquerade.js",
       "description": "Exactly what the name says. Allows you to change your pfp/avatar before sending a message without modifying your profile. has the ability to impersonate anyone by clicking onto their profile, clicking the 3 dots. Then clicking impersonate."
+    },
+    {
+      "name": "UpdateChecker",
+      "author": "0simp",
+      "link": "https://codeberg.org/0simp/AviaPlugins/raw/branch/main/UpdateChecker.js",
+      "description": "Adds an update checker for local plugins and the ability to install any updates it finds"
+    },
+    {
+      "name": "CharacterCounter",
+      "author": "AvaLilac",
+      "link": "https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/CharacterCounter.js",
+      "description": "Add a counter to your Textbox to display how many letters till you hit stoats limit inside channels"
     }
   ]
 }
