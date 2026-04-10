@@ -107,6 +107,18 @@
       "author": "AvaLilac",
       "link": "https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/CharacterCounter.js",
       "description": "Add a counter to your Textbox to display how many letters till you hit stoats limit inside channels"
+    },
+    {
+      "name": "NoSmoothScroll",
+      "author": "AvaLilac",
+      "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/NoSmoothScroll.js",
+      "description": "Disables Smooth Scroll On Avia Client"
+    },
+    {
+      "name": "AviaClientStickers",
+      "author": "AvaLilac",
+      "link": "https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/aviastickers.js",
+      "description": "Adds stickers to Avia Client. Note that these will only show up for users who have the plugin enabled"
     }
   ]
 }
