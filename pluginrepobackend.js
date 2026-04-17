@@ -119,6 +119,12 @@
       "author": "AvaLilac",
       "link": "https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/aviastickers.js",
       "description": "Adds stickers to Avia Client. Note that these will only show up for users who have the plugin enabled"
+    },
+    {
+      "name": "BetterDownloadButton",
+      "author": "0simp",
+      "link": "https://codeberg.org/0simp/AviaPlugins/raw/branch/main/BetterDownloadButton.js",
+      "description": "Prevents download buttons from opening new tabs"
     }
   ]
 }
