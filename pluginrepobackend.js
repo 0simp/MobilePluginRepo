@@ -13,22 +13,10 @@
       "description": "Keeps the Appearance label in English so Avia Client settings continue working properly."
     },
     {
-      "name": "ForceEmojiPack",
-      "author": "0simp",
-      "link": "https://raw.githubusercontent.com/0simp/ForceEmojiPack/refs/heads/main/ForceEmojiPack.js",
-      "description": "Forces emojis in embeds and message reactions to use your selected emoji pack"
-    },
-    {
       "name": "AppleEmojiPack",
       "author": "AvaLilac",
       "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/AppleEmoji.js",
       "description": "Converts every stoat emoji to Apples"
-    },
-    {
-      "name": "ShrinkEmojis",
-      "author": "0simp",
-      "link": "https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/ShrinkEmojis.js",
-      "description": "It shrinks emojis 🤯"
     },
     {
       "name": "CustomHomeButton",
@@ -37,10 +25,10 @@
       "description": "Allows you to set a custom home button image (look in the AviaClient Server to know what css to use)"
     },
     {
-      "name": "Userbadges",
+      "name": "UserbadgesV2",
       "author": "AvaLilac",
-      "link": "https://raw.githubusercontent.com/AvaLilac/AviaClientBadges/refs/heads/main/userbadges.js",
-      "description": "Plugin loads custom badges AvaLilac Puts in the backend on any user"
+      "link": "https://raw.githubusercontent.com/AvaLilac/AviaClientBadges/refs/heads/main/userbadgesV2.js",
+      "description": "Loads Custom badges into the badges card via a backend."
     },
     {
       "name": "CopyAttachmentLink",
@@ -65,12 +53,6 @@
       "author": "AvaLilac",
       "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/GradientRoles.js",
       "description": "Create Roles with gradients or modify existing roles to add gradients    WARNING THIS IS A TOKEN GRABBER When creating roles you need to provide your user token or else you aren't able to create a role THIS plugin grabs the token for you so you dont have to grab it every time.    If you do not feel comfortable Using this plugin because it grabs your token. Then you can either look through the code itself as its open source. Or just don't use it in general"
-    },
-    {
-      "name":"GifFix",
-      "author":"0simp",
-      "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/GifFix.js",
-      "description":"Fixes gifs and animated emojis not animating when they should"
     },
     {
       "name":"HideImageLinks",
@@ -125,6 +107,48 @@
       "author": "0simp",
       "link": "https://codeberg.org/0simp/AviaPlugins/raw/branch/main/BetterDownloadButton.js",
       "description": "Prevents download buttons from opening new tabs"
+    },
+    {
+      "name":"ShowOldMessageTimes",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/ShowOldMessageTimes.js",
+      "description":"Makes timestamps on messages older than 1 week show the time the message was sent next to them"
+    },
+    {
+      "name":"KickMembersFromGC",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/KickMembersFromGC.js",
+      "description":"Adds a context menu button to kick members from group chats\nWARNING:\nThis plugin contains a token grabber because your token is required to kick members from group chats. You can read through the code to verify that it is safe, or if you still don't feel comfortable with it just don't use the plugin\nAlso note that the button will not show if you click onto a group chat as soon as you load into stoat. If you do that, scroll up in the channel to load more messages, then it should show."
+    },
+    {
+      "name":"SilentLeaveGCs",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/SilentLeaveGCs.js",
+      "description":"Allows you to leave group chats silently (without notifying other members)"
+    },
+    {
+      "name":"FileSyntaxer",
+      "author":"Amelia",
+      "link":"https://codeberg.org/Amelinyaa/aviaStuff/raw/branch/main/plugins/File_Syntaxer.js",
+      "description":"Adds syntax highlighting to embedded files"
+    },
+    {
+      "name":"StoatServersDiscovery",
+      "author":"Pierce",
+      "link":"https://stoatservers.com/plugins/stoatservers-discovery.avia.js",
+      "description":"Includes a new button under the Discovery button that lets you navigate to stoatservers.com and join servers"
+    },
+    {
+      "name":"Hackban",
+      "author":"AvaLilac",
+      "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/BanUserWithoutBeingInServer.js",
+      "description":"Ban users even if they arent in your server via id"
+    },
+    {
+      "name":"Slowmode",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/Slowmode.js",
+      "description":"Allows you to set slowmode for channels (IN SECONDS). Also adds a popup for channels with slowmode. See github/codeberg repo for usage instructions"
     }
   ]
 }
