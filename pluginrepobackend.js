@@ -149,6 +149,12 @@
       "author":"0simp",
       "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/Slowmode.js",
       "description":"Allows you to set slowmode for channels (IN SECONDS). Also adds a popup for channels with slowmode. See github/codeberg repo for usage instructions"
+    },
+    {
+      "name":"RoleIcons",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/RoleIcons.js",
+      "description":"Adds client side support for adding and displaying role icons. See the codeberg/github repository or the plugins channel in the avia client server for usage instructions and notes"
     }
   ]
 }
