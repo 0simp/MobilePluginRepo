@@ -155,6 +155,12 @@
       "author":"0simp",
       "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/RoleIcons.js",
       "description":"Adds client side support for adding and displaying role icons. See the codeberg/github repository or the plugins channel in the avia client server for usage instructions and notes"
+    },
+    {
+      "name":"CopyRoleID",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/CopyRoleId.js",
+      "description":"Makes it possible to copy role ids without needing the manage roles permission. Note that the member list for each server needs to be loaded in order for this plugin to work, so if you try to copy a role's id and see text that says \"Couldn't copy role id\", briefly open the member list then try again."
     }
   ]
 }
