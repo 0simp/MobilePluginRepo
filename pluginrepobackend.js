@@ -161,6 +161,18 @@
       "author":"0simp",
       "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/CopyRoleId.js",
       "description":"Makes it possible to copy role ids without needing the manage roles permission. Note that the member list for each server needs to be loaded in order for this plugin to work, so if you try to copy a role's id and see text that says \"Couldn't copy role id\", briefly open the member list then try again."
+    },
+    {
+      "name":"StoatImageFix",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/StoatImageFix.js",
+      "description":"Fixes images hosted on cdn.stoatusercontent.com not embedding"
+    },
+    {
+      "name":"BAN_LIST",
+      "author":"AvaLilac",
+      "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/BAN_LIST.js",
+      "description":"Fetches and displays your server's full ban list in a readable format. View it directly in the panel, Copy it to clipboard or download it as a .txt file."
     }
   ]
 }
