@@ -173,6 +173,12 @@
       "author":"AvaLilac",
       "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/BAN_LIST.js",
       "description":"Fetches and displays your server's full ban list in a readable format. View it directly in the panel, Copy it to clipboard or download it as a .txt file."
+    },
+    {
+      "name":"EditEmojis",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/EditEmojis.js",
+      "description":"Adds client side support for renaming emojis. Note that even if the emoji is successfully renamed, the new name will not show up client side until you refresh. This is a stoat issue that I don't think I can do anything about"
     }
   ]
 }
