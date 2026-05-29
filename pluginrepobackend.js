@@ -115,12 +115,6 @@
       "description":"Makes timestamps on messages older than 1 week show the time the message was sent next to them"
     },
     {
-      "name":"KickMembersFromGC",
-      "author":"0simp",
-      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/KickMembersFromGC.js",
-      "description":"Adds a context menu button to kick members from group chats\nWARNING:\nThis plugin contains a token grabber because your token is required to kick members from group chats. You can read through the code to verify that it is safe, or if you still don't feel comfortable with it just don't use the plugin\nAlso note that the button will not show if you click onto a group chat as soon as you load into stoat. If you do that, scroll up in the channel to load more messages, then it should show."
-    },
-    {
       "name":"SilentLeaveGCs",
       "author":"0simp",
       "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/SilentLeaveGCs.js",
@@ -151,12 +145,6 @@
       "description":"Allows you to set slowmode for channels (IN SECONDS). Also adds a popup for channels with slowmode. See github/codeberg repo for usage instructions"
     },
     {
-      "name":"RoleIcons",
-      "author":"0simp",
-      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/RoleIcons.js",
-      "description":"Adds client side support for adding and displaying role icons. See the codeberg/github repository or the plugins channel in the avia client server for usage instructions and notes"
-    },
-    {
       "name":"CopyRoleID",
       "author":"0simp",
       "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/CopyRoleId.js",
@@ -179,6 +167,12 @@
       "author":"0simp",
       "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/EditEmojis.js",
       "description":"Adds client side support for renaming emojis. Note that even if the emoji is successfully renamed, the new name will not show up client side until you refresh. This is a stoat issue that I don't think I can do anything about"
+    },
+    {
+      "name":"timeout",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/timeout.js",
+      "description":"Adds a button for adding and removing timeouts from members.note that the timeout button gets added if either the ban or kick buttons are present in the member context menu, therefore it may incorrectly get added if you have permission to either ban or kick, but not timeout or it may incorrectly not get added if you have permission to timeout, but not ban or kick."
     }
   ]
 }
