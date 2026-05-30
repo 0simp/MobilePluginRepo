@@ -173,6 +173,18 @@
       "author":"0simp",
       "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/timeout.js",
       "description":"Adds a button for adding and removing timeouts from members.note that the timeout button gets added if either the ban or kick buttons are present in the member context menu, therefore it may incorrectly get added if you have permission to either ban or kick, but not timeout or it may incorrectly not get added if you have permission to timeout, but not ban or kick."
+    },
+    {
+      "name":"ClickSounds",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/ClickSounds.js",
+      "description":"Plays a sound effect whenever you click on a button"
+    },
+    {
+      "name":"KlipyGifs",
+      "author":"AvaLilac",
+      "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/KLIPY_GIFS.js",
+      "description":"Replaces the funtion of the built in gif picker using Klipy gifs and intergration with the Favorites panel to easily add to favorites by clicking the star on the top right of the gif. You have to provide your own klipy api key"
     }
   ]
 }
