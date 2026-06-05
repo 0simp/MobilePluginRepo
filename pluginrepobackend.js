@@ -64,7 +64,7 @@
       "name": "EmojiSounds",
       "author": "0simp",
       "link": "https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/EmojiSounds.js",
-      "description": "Allows you to set sounds to be played when certain emojis are sent in chat. After enabling the plugin, go into your user settings and click on the button that says '(Avia) Emoji Sounds Settings'. Then, paste the emoji and the direct link to the sound you want in the appropriate boxes."
+      "description": "Allows you to set sounds to be played when certain emojis are sent in chat. After enabling the plugin, go into your user settings and click on the button that says '(Avia) Emoji Sounds Settings'. Then, paste the emoji into the emoji box and upload a sound file"
     },
     {
       "name": "Devtools",
