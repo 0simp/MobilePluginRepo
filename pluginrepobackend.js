@@ -43,6 +43,12 @@
       "description": "Improves avia's built in favourites system by adding a button to the image viewer to add the image to favourites, a refresh button to the favourites panel (click to make images/gifs added via the add favourites button show up) and making clicking on an image/gif put the link into the chat bar instead of copying it to the clipboard. This plugin is just a combination of AddToFavourites,FavsToChat and a new refresh button."
     },
     {
+      "name":"BetterFavourites1.7.0",
+      "author":"0simp",
+      "link":"https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/BetterFavourites1.7.0.js",
+      "description":"BetterFavorites for avia client 1.7.0. Use this if you are on avia mobile 1.5 or higher, otherwise use \"BetterFavourites\". The original will be discontinued when avia 1.7 officially releases"
+    },
+    {
       "name": "NoBlockedMessages",
       "author": "AvaLilac",
       "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/NoBlockedMessages.js",
@@ -185,6 +191,12 @@
       "author":"AvaLilac",
       "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/KLIPY_GIFS.js",
       "description":"Replaces the funtion of the built in gif picker using Klipy gifs and intergration with the Favorites panel to easily add to favorites by clicking the star on the top right of the gif. You have to provide your own klipy api key"
+    },
+    {
+      "name":"BetterScrollLock",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaMobilePlugins/raw/branch/main/BetterScrollLock.js",
+      "description":"Prevents you from accidentally clicking the home button while the scroll lock is active. This plugin will be integrated in the next avia mobile update"
     }
   ]
 }
