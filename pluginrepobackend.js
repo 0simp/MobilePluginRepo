@@ -185,12 +185,6 @@
       "author":"AvaLilac",
       "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/KLIPY_GIFS.js",
       "description":"Replaces the funtion of the built in gif picker using Klipy gifs and intergration with the Favorites panel to easily add to favorites by clicking the star on the top right of the gif. You have to provide your own klipy api key"
-    },
-    {
-      "name":"BetterScrollLock",
-      "author":"0simp",
-      "link":"https://codeberg.org/0simp/AviaMobilePlugins/raw/branch/main/BetterScrollLock.js",
-      "description":"Prevents you from accidentally clicking the home button while the scroll lock is active. This plugin will be integrated in the next avia mobile update"
     }
   ]
 }
