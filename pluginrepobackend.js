@@ -185,6 +185,30 @@
       "author":"AvaLilac",
       "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/KLIPY_GIFS.js",
       "description":"Replaces the funtion of the built in gif picker using Klipy gifs and intergration with the Favorites panel to easily add to favorites by clicking the star on the top right of the gif. You have to provide your own klipy api key"
+    },
+    {
+      "name":"BetterImageViewer",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/BetterImageViewer.js",
+      "description":"Improves stoat's image viewer by adding a button to view the image in a new tab. Also fixes the bar thing with all the buttons on it going off the screen on phones"
+    },
+    {
+      "name":"WebhookProfiles",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/WebhookProfiles.js",
+      "description":"Gives webhooks profile popups just like regular users. The main reason you'd want this is to view its pfp in higher quality and/or download it."
+    },
+    {
+      "name":"AnimateServerIcons",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/AnimateServerIcons.js",
+      "description":"Adds client side support for rendering animated server icons"
+    },
+    {
+      "name":"Timestamps",
+      "author":"AvaLilac",
+      "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/Timestamps.js",
+      "description":"Easily make custom timestamps!"
     }
   ]
 }
