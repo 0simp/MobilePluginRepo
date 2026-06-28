@@ -209,6 +209,12 @@
       "author":"AvaLilac",
       "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/Timestamps.js",
       "description":"Easily make custom timestamps!"
+    },
+    {
+      "name":"FileSizeWarnings",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/FileSizeWarnings.js",
+      "description":"Adds warning popups for when files are too large to be uploaded as icons, banners or emojis"
     }
   ]
 }
