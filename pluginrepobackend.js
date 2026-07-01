@@ -218,7 +218,7 @@
     },
     {
       "name":"Echo",
-      "Author":"AvaLilac",
+      "author":"AvaLilac",
       "link":"https://github.com/AvaLilac/Ava-s-AviaClient-Plugins/blob/main/Echo.js",
       "description":"Replaces the search messages bar with a button that opens the Search Bar on click.\n**DO NOT LOAD THIS PLUGIN ON A PHONE, IT WILL BRICK YOUR CLIENT SO HARD THAT THE ONLY FIX IS TO UNINSTALL AND REINSTALL THE USERSCRIPT**"
     }
