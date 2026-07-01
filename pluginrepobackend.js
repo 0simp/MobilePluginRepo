@@ -25,12 +25,6 @@
       "description": "Allows you to set a custom home button image (look in the AviaClient Server to know what css to use)"
     },
     {
-      "name": "UserbadgesV2",
-      "author": "AvaLilac",
-      "link": "https://raw.githubusercontent.com/AvaLilac/AviaClientBadges/refs/heads/main/userbadgesV2.js",
-      "description": "Loads Custom badges into the badges card via a backend."
-    },
-    {
       "name": "CopyAttachmentLink",
       "author": "0simp",
       "link": "https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/CopyAttachmentLink.js",
@@ -65,12 +59,6 @@
       "author": "0simp",
       "link": "https://raw.githubusercontent.com/0simp/AviaPlugins/refs/heads/main/EmojiSounds.js",
       "description": "Allows you to set sounds to be played when certain emojis are sent in chat. After enabling the plugin, go into your user settings and click on the button that says '(Avia) Emoji Sounds Settings'. Then, paste the emoji into the emoji box and upload a sound file"
-    },
-    {
-      "name": "Devtools",
-      "author": "AvaLilac",
-      "link": "https://raw.githubusercontent.com/AvaLilac/Ava-s-AviaClient-Plugins/refs/heads/main/ConsoleDevTools.js",
-      "description": "Get Full access to the browsers devtools console inside AviaClientDesktop \"works on web\""
     },
     {
       "name": "Masquerade",
@@ -233,6 +221,12 @@
       "author":"AvaLilac",
       "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/fav_status.js",
       "description":"Adds the ability to favorite Status's so you can reuse them later"
+    },
+    {
+      "name":"CopyFileContents",
+      "author":"0simp",
+      "link":"https://codeberg.org/0simp/AviaPlugins/raw/branch/main/CopyFileContents.js",
+      "description":"Adds a button to text file attachments to copy their contents"
     }
   ]
 }
