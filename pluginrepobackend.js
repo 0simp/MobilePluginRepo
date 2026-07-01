@@ -221,6 +221,18 @@
       "author":"AvaLilac",
       "link":"https://github.com/AvaLilac/Ava-s-AviaClient-Plugins/blob/main/Echo.js",
       "description":"Replaces the search messages bar with a button that opens the Search Bar on click.\n**DO NOT LOAD THIS PLUGIN ON A PHONE, IT WILL BRICK YOUR CLIENT SO HARD THAT THE ONLY FIX IS TO UNINSTALL AND REINSTALL THE USERSCRIPT**"
+    },
+    {
+      "name":"Unsent Messages Toolbar",
+      "author":"AvaLilac",
+      "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/UNSENT_MESSAGE_TOOLBAR.js",
+      "description":"Injects a toolbar into stoat for unsent messages that allow you to use the same functions found in right click. Inside of the toolbar so you dont have to right click"
+    },
+    {
+      "name":"Favourite Status's",
+      "author":"AvaLilac",
+      "link":"https://codeberg.org/AvaLilac/Ava-s-AviaClient-Plugins/raw/branch/main/fav_status.js",
+      "description":"Adds the ability to favorite Status's so you can reuse them later"
     }
   ]
 }
